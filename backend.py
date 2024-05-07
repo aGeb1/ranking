@@ -40,7 +40,7 @@ def upload_item():
         (data["name"], data["description"], 0.0, 0),
     )
     con.commit()
-    return jsonify({"id": cur.fetchone()[0]})  # wrong
+    return jsonify({"id": cur.fetchone()[0]})
 
 
 @app.route("/delete_item", methods=["POST"])

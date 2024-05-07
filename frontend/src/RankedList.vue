@@ -42,6 +42,7 @@ export default {
         .then(response => {
           this.items = response.data.items.map((item) => {
             return {
+              id: item.id,
               name: item.name,
               description: item.description,
               ratingValue: item.rating_value,
@@ -66,13 +67,13 @@ export default {
         const newItem = {
           name: this.newItemName,
           description: this.newItemDescription,
-          ratingValue: 0,
-          ratingCount: 0
+          ratingValue: 0, // works on page, not with database
+          ratingCount: 0, // works on page, not with database
         };
         
         axios.post('http://localhost:5000/upload_item', newItem)
           .then(response => {
-            this.items.push(newItem);
+            this.items.push({ ...newItem, id: response.data.id });
             this.hideAddItemDialog();
           })
           .catch(error => {
@@ -84,8 +85,17 @@ export default {
       }
     },
     removeItem(index) {
-      this.items.splice(index, 1);
+      axios.post('http://localhost:5000/delete_item', { id: this.items[index].id })
+        .then(_response => {
+          // Remove the item from the list if it was successfully deleted
+          this.items.splice(index, 1);
+        })
+        .catch(error => {
+          console.error('Error deleting item:', error);
+          alert('Failed to delete item. Please try again later.');
+        });
     },
+
   },
 };
 </script>
