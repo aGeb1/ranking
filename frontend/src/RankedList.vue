@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import RankedItem from './RankedItem.vue';
 
 export default {
@@ -27,16 +28,35 @@ export default {
   data() {
     return {
       items: [
-        {name: 'Item 1', description: 'what', ratingValue: 0, ratingCount: 0},
-        {name: 'Item 2', description: 'wait', ratingValue: 0, ratingCount: 0},
-        {name: 'Item 3', description: 'huh', ratingValue: 0, ratingCount: 0}
+        // {name: 'Item 1', description: 'what', ratingValue: 0, ratingCount: 0},
+        // {name: 'Item 2', description: 'wait', ratingValue: 0, ratingCount: 0},
+        // {name: 'Item 3', description: 'huh', ratingValue: 0, ratingCount: 0}
       ],
       showDialog: false,
       newItemName: '',
       newItemDescription: ''
     };
   },
+  created() {
+    this.fetchRankingData();
+  },
   methods: {
+    fetchRankingData() {
+      axios.get('http://localhost:5000/ranking/popularity')
+        .then(response => {
+          this.items = response.data.items.map((item) => {
+            return {
+              name: item.name,
+              description: item.description,
+              ratingValue: item.rating_value,
+              ratingCount: item.rating_count
+            };
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching ranking data:', error);
+        });
+    },
     showAddItemDialog() {
       this.showDialog = true;
     },

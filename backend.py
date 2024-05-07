@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import psycopg2
 
 con = psycopg2.connect(
@@ -7,6 +8,7 @@ con = psycopg2.connect(
 cur = con.cursor()
 
 app = Flask(__name__)
+CORS(app)
 
 
 # Helper Functions
