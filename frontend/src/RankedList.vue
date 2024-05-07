@@ -27,11 +27,7 @@ export default {
   },
   data() {
     return {
-      items: [
-        // {name: 'Item 1', description: 'what', ratingValue: 0, ratingCount: 0},
-        // {name: 'Item 2', description: 'wait', ratingValue: 0, ratingCount: 0},
-        // {name: 'Item 3', description: 'huh', ratingValue: 0, ratingCount: 0}
-      ],
+      items: [],
       showDialog: false,
       newItemName: '',
       newItemDescription: ''
@@ -67,13 +63,22 @@ export default {
     },
     addItem() {
       if (this.newItemName.trim() && this.newItemDescription.trim()) {
-        this.items.push({
+        const newItem = {
           name: this.newItemName,
           description: this.newItemDescription,
           ratingValue: 0,
           ratingCount: 0
-        });
-        this.hideAddItemDialog();
+        };
+        
+        axios.post('http://localhost:5000/upload_item', newItem)
+          .then(response => {
+            this.items.push(newItem);
+            this.hideAddItemDialog();
+          })
+          .catch(error => {
+            console.error('Error uploading item:', error);
+            alert('Failed to add item. Please try again later.');
+          });
       } else {
         alert('Please enter a name and description for the new item.');
       }
