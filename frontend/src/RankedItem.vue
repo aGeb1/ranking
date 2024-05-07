@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     removeItem() {
-      console.log(this.index);
       this.remove(this.index);
     },
     submitRating() {

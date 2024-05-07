@@ -36,6 +36,9 @@ export default {
   components: {
     RankedItem,
   },
+  props: {
+    sortBy: String,
+  },
   data() {
     return {
       items: [],
@@ -47,9 +50,16 @@ export default {
   created() {
     this.fetchRankingData();
   },
+  watch: {
+    sortBy(newValue, oldValue) {
+      if (newValue != oldValue) {
+        this.fetchRankingData();
+      }
+    },
+  },
   methods: {
     fetchRankingData() {
-      axios.get('http://localhost:5000/ranking/popularity')
+      axios.get(`http://localhost:5000/ranking/${ this.sortBy }`)
         .then(response => {
           this.items = response.data.items.map((item) => {
             return {
@@ -98,7 +108,6 @@ export default {
     removeItem(index) {
       axios.post('http://localhost:5000/delete_item', { id: this.items[index].id })
         .then(_response => {
-          // Remove the item from the list if it was successfully deleted
           this.items.splice(index, 1);
         })
         .catch(error => {

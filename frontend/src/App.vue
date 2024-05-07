@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Header />
+    <Header :sortBy="setSortType"/>
     <div class="main-content">
-      <RankedList />
+      <RankedList :sortBy="sortBy" />
     </div>
   </div>
 </template>
@@ -16,6 +16,16 @@ export default {
   components: {
     Header,
     RankedList,
+  },
+  data() {
+    return {
+      sortBy: 'popularity',
+    };
+  },
+  methods: {
+    setSortType(sortType) {
+      this.sortBy = sortType;
+    },
   },
 };
 </script>
