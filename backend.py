@@ -51,12 +51,12 @@ def delete_item():
     return jsonify({})
 
 
-@app.route("/apply_rating", methods=["POST"])
-def apply_rating():
+@app.route("/submit_rating", methods=["POST"])
+def submit_rating():
     data = request.json
     rating, id = data["rating"], data["id"]
     if not 1 <= rating <= 10:
-        raise TypeError("Rating must be an integer between 1 and 10.")
+        raise TypeError("Rating must be between 1 and 10.")
     cur.execute("SELECT rating_value, rating_count FROM item WHERE id = %s", (id,))
     previous_rating, count = cur.fetchone()
     new_rating = (previous_rating * count + rating) / (count + 1)

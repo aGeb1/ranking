@@ -9,6 +9,7 @@
         :ratingValue="item.ratingValue"
         :ratingCount="item.ratingCount"
         :index="index"
+        :id="item.id"
         :remove="removeItem"
         :rate="updateRating"
       />

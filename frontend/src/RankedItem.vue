@@ -13,7 +13,7 @@
         <div class="rating-input">
           <form @submit.prevent="submitRating">
             <div>
-              <input type="number" v-model.number="newRating" min="0" max="5" step="0.1" placeholder="Enter your rating (0-5)" required>
+              <input type="number" v-model.number="newRating" min="1" max="10" step="1" placeholder="Enter your rating (1-10)" required>
             </div>
             <div>
               <button type="submit">Submit Rating</button>
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'RankedItem',
   props: {
@@ -35,12 +37,13 @@ export default {
     ratingValue: Number,
     ratingCount: Number,
     index: Number,
+    id: Number,
     remove: Function,
     rate: Function,
   },
   data() {
     return {
-      newRating: 0,
+      newRating: 5,
     };
   },
   methods: {
@@ -49,10 +52,21 @@ export default {
       this.remove(this.index);
     },
     submitRating() {
-      const newRatingValue = (this.ratingValue * this.ratingCount + this.newRating) / (this.ratingCount + 1);
-      const newRatingCount = this.ratingCount + 1;
-      this.rate(this.index, newRatingValue, newRatingCount);
-      this.newRating = 0;
+      axios.post('http://localhost:5000/submit_rating',
+        {
+          rating: this.newRating,
+          id: this.id,
+        })
+        .then(_response => {
+          const newRatingValue = (this.ratingValue * this.ratingCount + this.newRating) / (this.ratingCount + 1);
+          const newRatingCount = this.ratingCount + 1;
+          this.rate(this.index, newRatingValue, newRatingCount);
+          this.newRating = 5;
+        })
+        .catch(error => {
+          console.error('Error submitting rating:', error);
+          alert('Failed to add rating. Please try again later.');
+        });
     },
   },
 };
