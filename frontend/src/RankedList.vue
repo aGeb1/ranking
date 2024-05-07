@@ -1,7 +1,17 @@
 <template>
   <div>
-    <div v-for="(item, index) in items" :key="index">
-      <RankedItem :name="item.name" :description="item.description" :ratingValue="item.ratingValue" :ratingCount="item.ratingCount" :index="index" :remove="removeItem" />
+    <div>
+      <RankedItem
+        v-for="(item, index) in items"
+        :key="index"
+        :name="item.name"
+        :description="item.description"
+        :ratingValue="item.ratingValue"
+        :ratingCount="item.ratingCount"
+        :index="index"
+        :remove="removeItem"
+        :rate="updateRating"
+      />
     </div>
     <div class="add-item">
       <button @click="showAddItemDialog">Add Item</button>
@@ -95,7 +105,10 @@ export default {
           alert('Failed to delete item. Please try again later.');
         });
     },
-
+    updateRating(index, newRatingValue, newRatingCount) {
+      this.items[index].ratingValue = newRatingValue;
+      this.items[index].ratingCount = newRatingCount;
+    },
   },
 };
 </script>

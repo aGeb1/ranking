@@ -1,12 +1,28 @@
 <template>
   <div class="item">
     <div class="item-content">
-      <h3>{{ name }}</h3>
-      <p>{{ description }}</p>
-      <p>Current Rating: {{ ratingValue.toFixed(2) }}</p>
-      <p>{{ ratingCount }} Ratings</p>
+      <div>
+        <h3>{{ name }}</h3>
+        <p>{{ description }}</p>
+      </div>
+      <div class="rating-section">
+        <div class="rating-text">
+          <p>Current Rating: {{ ratingValue.toFixed(2) }}</p>
+          <p>{{ ratingCount }} Ratings</p>
+        </div>
+        <div class="rating-input">
+          <form @submit.prevent="submitRating">
+            <div>
+              <input type="number" v-model.number="newRating" min="0" max="5" step="0.1" placeholder="Enter your rating (0-5)" required>
+            </div>
+            <div>
+              <button type="submit">Submit Rating</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    <button @click="removeItem">Remove</button>
+    <button @click="removeItem" class="remove-button">Remove</button>
   </div>
 </template>
 
@@ -20,10 +36,23 @@ export default {
     ratingCount: Number,
     index: Number,
     remove: Function,
+    rate: Function,
+  },
+  data() {
+    return {
+      newRating: 0,
+    };
   },
   methods: {
     removeItem() {
+      console.log(this.index);
       this.remove(this.index);
+    },
+    submitRating() {
+      const newRatingValue = (this.ratingValue * this.ratingCount + this.newRating) / (this.ratingCount + 1);
+      const newRatingCount = this.ratingCount + 1;
+      this.rate(this.index, newRatingValue, newRatingCount);
+      this.newRating = 0;
     },
   },
 };
@@ -41,10 +70,29 @@ export default {
   padding: 20px;
   border-radius: 8px;
   flex-grow: 1;
+  display: flex;
+  justify-content: space-between; /* Align children at each end of the container */
+}
+
+.rating-section {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+}
+
+.rating-text {
+  margin-bottom: 10px; /* Add some spacing between the rating text and input */
+}
+
+.rating-input {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+}
+
+.remove-button {
+  margin-left: 10px;
 }
 
 button {
-  margin-left: 10px;
   padding: 8px 16px;
   background-color: #dc3545;
   color: white;
